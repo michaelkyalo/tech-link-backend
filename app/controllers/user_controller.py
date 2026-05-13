@@ -13,7 +13,7 @@ class UserListResource(Resource):
     @jwt_required()
     def get(self):
 
-        # Fetch all users
+        
         users = get_users()
 
         return {

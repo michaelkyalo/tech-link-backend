@@ -1,30 +1,74 @@
 from flask import request
-
 from flask_restful import Resource
-
 from flask_jwt_extended import create_access_token
 
-from app.services.auth_service import create_user
+from app.services.auth_service import (
+    register_user,
+    login_user
+)
 
-from app.schemas.user_schema import UserSchema
-
-user_schema = UserSchema()
 
 class RegisterResource(Resource):
 
     def post(self):
 
+        
         data = request.get_json()
 
-        user = create_user(data)
+        
+        user, error = register_user(data)
 
-        token = create_access_token(
-            identity=user.id
-        )
+        
+        if error:
+            return {
+                "success": False,
+                "message": error
+            }, 
+
+        
+        token = create_access_token(identity=user.id)
 
         return {
             "success": True,
             "message": "User registered successfully",
             "token": token,
-            "user": user_schema.dump(user)
-        }, 201
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role
+            }
+        }, 
+
+
+class LoginResource(Resource):
+
+    def post(self):
+
+        
+        data = request.get_json()
+
+    
+        user, error = login_user(data)
+
+        
+        if error:
+            return {
+                "success": False,
+                "message": error
+            },
+
+    
+        token = create_access_token(identity=user.id)
+
+        return {
+            "success": True,
+            "message": "Login successful",
+            "token": token,
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role
+            }
+        },

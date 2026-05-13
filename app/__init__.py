@@ -36,6 +36,8 @@ def create_app():
     from app.routes.chat_routes import initialize_chat_routes
     from app.routes.notification_routes import initialize_notification_routes
     from app.routes.order_item_routes import initialize_order_item_routes
+    from app.routes.payment_routes import initialize_payment_routes
+    from app.routes.review_routes import initialize_review_routes
 
     initialize_auth_routes(api)
     initialize_product_routes(api)
@@ -44,5 +46,7 @@ def create_app():
     initialize_chat_routes(api)
     initialize_notification_routes(api)
     initialize_order_item_routes(api)
-
+    initialize_payment_routes(api)
+    initialize_review_routes(api)
+    
     return app

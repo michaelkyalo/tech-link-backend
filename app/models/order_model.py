@@ -1,42 +1,50 @@
+from datetime import datetime
+
 from app.config.database import db
 
 
-class OrderItem(db.Model):
+class Order(db.Model):
 
-    __tablename__ = "order_items"
+    __tablename__ = "orders"
 
-    order_item_id = db.Column(
+    order_id = db.Column(
         db.BigInteger,
         primary_key=True
     )
 
-    order_id = db.Column(
+    buyer_id = db.Column(
         db.BigInteger,
-        db.ForeignKey("orders.order_id"),
+        db.ForeignKey("users.user_id"),
         nullable=False
     )
 
-    product_id = db.Column(
-        db.BigInteger,
-        db.ForeignKey("products.product_id"),
-        nullable=False
-    )
-
-    quantity = db.Column(
-        db.Integer,
-        nullable=False
-    )
-
-    unit_price = db.Column(
+    total_price = db.Column(
         db.Numeric(10, 2),
         nullable=False
     )
 
-    subtotal = db.Column(
-        db.Numeric(10, 2),
-        nullable=False
+    order_status = db.Column(
+        db.String(30),
+        default="pending"
+    )
+
+    payment_status = db.Column(
+        db.String(30),
+        default="pending"
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    order_items = db.relationship(
+        "OrderItem",
+        backref="order",
+        lazy=True,
+        cascade="all, delete"
     )
 
     def __repr__(self):
 
-        return f"<OrderItem {self.order_item_id}>"
+        return f"<Order {self.order_id}>"

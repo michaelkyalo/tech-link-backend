@@ -26,3 +26,21 @@ from .user_controller import (
     UserResource,
     UserRoleResource
 )
+
+from .review_controller import (
+    ReviewListResource,
+    ReviewResource
+)
+from .order_item_controller import (
+    OrderItemResource
+)
+
+from .payment_controller import (
+    PaymentResource
+)
+from .delivery_controller import (
+    DeliveryResource    
+)
+
+
+    

@@ -19,7 +19,7 @@ def create_new_delivery():
     return jsonify({
         "message": "Delivery created",
         "delivery": delivery
-    }), 201
+    }),
 
 
 @delivery_bp.route("/deliveries/order/<int:order_id>", methods=["GET"])

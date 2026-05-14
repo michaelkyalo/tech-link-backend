@@ -22,7 +22,7 @@ def add_review():
 @review_bp.route("/reviews/<int:product_id>", methods=["GET"])
 def fetch_reviews(product_id):
     reviews = get_product_reviews(product_id)
-    return jsonify(reviews), 200
+    return jsonify(reviews),
 
 
 @review_bp.route("/reviews/<int:review_id>", methods=["DELETE"])

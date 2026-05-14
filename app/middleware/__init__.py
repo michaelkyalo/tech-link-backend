@@ -1,0 +1,3 @@
+from app.middleware.auth_middleware import token_required
+
+from app.middleware.error_handler import register_error_handlers

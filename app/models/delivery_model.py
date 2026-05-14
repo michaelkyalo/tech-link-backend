@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from app.config.database import db
 
 
@@ -40,6 +39,29 @@ class Delivery(db.Model):
         db.DateTime
     )
 
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    order = db.relationship(
+        "Order",
+        backref="deliveries"
+    )
+
     def __repr__(self):
 
         return f"<Delivery {self.delivery_id}>"
+
+    def to_dict(self):
+
+        return {
+            "delivery_id": self.delivery_id,
+            "order_id": self.order_id,
+            "delivery_method": self.delivery_method,
+            "delivery_status": self.delivery_status,
+            "pickup_location": self.pickup_location,
+            "destination_location": self.destination_location,
+            "delivery_date": self.delivery_date,
+            "created_at": self.created_at
+        }

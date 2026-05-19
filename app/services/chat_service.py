@@ -1,5 +1,5 @@
 from app.config.database import db
-from app.models.chat_model import Chat
+from app.models.chat_model import Message
 
 class ChatService:
 
@@ -7,10 +7,11 @@ class ChatService:
     def create_message(data):
         
 
-        message = Chat(
+        message = Message(
             sender_id=data["sender_id"],
             receiver_id=data["receiver_id"],
-            message=data["message"]
+            product_id=data["product_id"],
+            message_content=data["message"]
         )
 
         db.session.add(message)
@@ -21,14 +22,14 @@ class ChatService:
     @staticmethod
     def get_chat_between_users(sender_id, receiver_id):
 
-        return Chat.query.filter(
+        return Message.query.filter(
             (
-                (Chat.sender_id == sender_id) &
-                (Chat.receiver_id == receiver_id)
+                (Message.sender_id == sender_id) &
+                (Message.receiver_id == receiver_id)
             ) |
             (
-                (Chat.sender_id == receiver_id) &
-                (Chat.receiver_id == sender_id)
+                (Message.sender_id == receiver_id) &
+                (Message.receiver_id == sender_id)
             )
         ).all()
 

@@ -1,46 +1,60 @@
-from flask import Blueprint, request, jsonify
-from app.services.delivery_service import (
-    create_delivery,
-    get_delivery_by_order,
-    update_delivery_status
-)
-
-delivery_bp = Blueprint("delivery_bp", __name__)
+from flask_restful import Resource
+from flask import request
+from app.services.delivery_service import DeliveryService
+from app.models.delivery_model import Delivery
 
 
-@delivery_bp.route("/deliveries", methods=["POST"])
-def create_new_delivery():
-    data = request.get_json()
-    delivery, error = create_delivery(data)
+class DeliveryListResource(Resource):
 
-    if error:
-        return jsonify({"message": error}),
+    def post(self):
+        data = request.get_json()
 
-    return jsonify({
-        "message": "Delivery created",
-        "delivery": delivery
-    }),
+        delivery, error = DeliveryService.create_delivery(data)
 
+        if error:
+            return {"message": error}, 400
 
-@delivery_bp.route("/deliveries/order/<int:order_id>", methods=["GET"])
-def fetch_delivery_by_order(order_id):
-    delivery = get_delivery_by_order(order_id)
-
-    if not delivery:
-        return jsonify({"message": "Delivery not found"}), 404
-
-    return jsonify(delivery), 
+        return {
+            "message": "Delivery created",
+            "delivery": {
+                "id": delivery.id,
+                "order_id": delivery.order_id,
+                "status": delivery.status
+            }
+        }, 201
 
 
-@delivery_bp.route("/deliveries/<int:delivery_id>", methods=["PATCH"])
-def update_status(delivery_id):
-    data = request.get_json()
-    updated, error = update_delivery_status(delivery_id, data)
+class DeliveryOrderResource(Resource):
 
-    if error:
-        return jsonify({"message": error}),
+    def get(self, order_id):
 
-    return jsonify({
-        "message": "Delivery status updated",
-        "delivery": updated
-    }), 
+        delivery = DeliveryService.get_delivery_by_order(order_id)
+
+        if not delivery:
+            return {"message": "Delivery not found"}, 404
+
+        return {
+            "id": delivery.id,
+            "order_id": delivery.order_id,
+            "status": delivery.status
+        }, 200
+
+
+class DeliveryResource(Resource):
+
+    def patch(self, delivery_id):
+
+        data = request.get_json()
+
+        updated, error = DeliveryService.update_delivery_status(delivery_id, data)
+
+        if error:
+            return {"message": error}, 400
+
+        return {
+            "message": "Delivery status updated",
+            "delivery": {
+                "id": updated.id,
+                "status": updated.status
+            }
+        }, 200

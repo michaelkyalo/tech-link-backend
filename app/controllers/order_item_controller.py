@@ -1,28 +1,43 @@
-from flask import Blueprint, request, jsonify
-from app.services.order_item_service import (
-    add_item_to_order,
-    remove_item_from_order
-)
-
-order_item_bp = Blueprint("order_item_bp", __name__)
+from flask_restful import Resource
+from flask import request
+from app.services.order_item_service import OrderItemService
+from app.models.order_item_model import OrderItem
 
 
-@order_item_bp.route("/order-items", methods=["POST"])
-def add_item():
-    data = request.get_json()
-    item, error = add_item_to_order(data)
+class OrderItemListResource(Resource):
 
-    if error:
-        return jsonify({"message": error}), 400
+    def post(self):
+        data = request.get_json()
 
-    return jsonify({"message": "Item added", "item": item}), 201
+        item, error = OrderItemService.create_order_item(data)
+
+        if error:
+            return {"message": error}, 400
+
+        return {
+            "message": "Item added",
+            "item": {
+                "id": item.id,
+                "order_id": item.order_id,
+                "product_id": item.product_id,
+                "quantity": item.quantity,
+                "subtotal": item.subtotal
+            }
+        }, 201
 
 
-@order_item_bp.route("/order-items/<int:item_id>", methods=["DELETE"])
-def remove_item(item_id):
-    success, error = remove_item_from_order(item_id)
+class OrderItemResource(Resource):
 
-    if error:
-        return jsonify({"message": error}),
+    def delete(self, order_item_id):
 
-    return jsonify({"message": "Item removed"}),
+        order_item = OrderItem.query.get(order_item_id)
+
+        if not order_item:
+            return {"message": "Order item not found"}, 404
+
+        success, error = OrderItemService.delete_order_item(order_item)
+
+        if error:
+            return {"message": error}, 400
+
+        return {"message": "Item removed"}, 200

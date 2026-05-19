@@ -1,11 +1,7 @@
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
-from app.services.user_service import (
-    get_users,
-    get_single_user,
-    get_users_by_role
-)
+from app.services.user_service import UserService
 
 
 class UserListResource(Resource):
@@ -13,8 +9,7 @@ class UserListResource(Resource):
     @jwt_required()
     def get(self):
 
-        
-        users = get_users()
+        users = UserService.get_users()
 
         return {
             "success": True,
@@ -27,7 +22,7 @@ class UserListResource(Resource):
                 }
                 for user in users
             ]
-        },
+        }, 200
 
 
 class UserResource(Resource):
@@ -35,14 +30,13 @@ class UserResource(Resource):
     @jwt_required()
     def get(self, user_id):
 
-        # Find user
-        user = get_single_user(user_id)
+        user = UserService.get_single_user(user_id)
 
         if not user:
             return {
                 "success": False,
                 "message": "User not found"
-            }, 
+            }, 404
 
         return {
             "success": True,
@@ -52,7 +46,7 @@ class UserResource(Resource):
                 "email": user.email,
                 "role": user.role
             }
-        },
+        }, 200
 
 
 class UserRoleResource(Resource):
@@ -60,8 +54,7 @@ class UserRoleResource(Resource):
     @jwt_required()
     def get(self, role):
 
-        # Fetch users by role
-        users = get_users_by_role(role)
+        users = UserService.get_users_by_role(role)
 
         return {
             "success": True,
@@ -73,4 +66,4 @@ class UserRoleResource(Resource):
                 }
                 for user in users
             ]
-        },
+        }, 200

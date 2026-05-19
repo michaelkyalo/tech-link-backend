@@ -1,35 +1,54 @@
-from flask import Blueprint, request, jsonify
-from app.services.review_service import (
-    create_review,
-    get_product_reviews,
-    delete_review
-)
-
-review_bp = Blueprint("review_bp", _name_)
+from flask_restful import Resource
+from flask import request
+from app.services.review_service import ReviewService
 
 
-@review_bp.route("/reviews", methods=["POST"])
-def add_review():
-    data = request.get_json()
-    review, error = create_review(data)
+class ReviewListResource(Resource):
+    def get(self):
+        reviews = ReviewService.get_all_reviews()
 
-    if error:
-        return jsonify({"message": error}),
+        return [
+            {
+                "id": r.id,
+                "user_id": r.user_id,
+                "product_id": r.product_id,
+                "rating": r.rating,
+                "comment": r.comment
+            }
+            for r in reviews.items
+        ], 200
 
-    return jsonify({"message": "Review created", "review": review}),
+    def post(self):
+        data = request.get_json()
+
+        review, error = ReviewService.create_review(data)
+
+        if error:
+            return {"message": error}, 400
+
+        return {"message": "Review created"}, 201
 
 
-@review_bp.route("/reviews/<int:product_id>", methods=["GET"])
-def fetch_reviews(product_id):
-    reviews = get_product_reviews(product_id)
-    return jsonify(reviews),
+class ReviewResource(Resource):
 
+    def get(self, review_id):
+        review = ReviewService.get_review_by_id(review_id)
 
-@review_bp.route("/reviews/<int:review_id>", methods=["DELETE"])
-def remove_review(review_id):
-    success, error = delete_review(review_id)
+        if not review:
+            return {"message": "Not found"}, 404
 
-    if error:
-        return jsonify({"message": error}),
+        return {
+            "id": review.id,
+            "rating": review.rating,
+            "comment": review.comment
+        }, 200
 
-    return jsonify({"message": "Review deleted"}),
+    def delete(self, review_id):
+        review = ReviewService.get_review_by_id(review_id)
+
+        if not review:
+            return {"message": "Not found"}, 404
+
+        ReviewService.delete_review(review)
+
+        return {"message": "Deleted"}, 200

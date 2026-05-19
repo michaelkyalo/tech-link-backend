@@ -8,3 +8,4 @@ from app.services.review_service import ReviewService
 from app.services.chat_service import ChatService
 from app.services.email_service import EmailService
 from app.services.delivery_service import DeliveryService
+from app.services.notification_service import NotificationService

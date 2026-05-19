@@ -1,7 +1,4 @@
-from app.controllers.notification_controller import (
-    NotificationListResource
-)
-
+from app.controllers.notification_controller import NotificationListResource
 
 def register_notification_routes(api):
 

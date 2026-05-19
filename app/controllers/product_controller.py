@@ -2,21 +2,14 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
-from app.services.product_service import (
-    create_product,
-    get_all_products,
-    get_product_by_id,
-    update_product,
-    delete_product
-)
 
-
+from app.services.product_service import ProductService
 class ProductListResource(Resource):
 
     def get(self):
 
         
-        products = get_all_products()
+        products = ProductService.get_all_products()
 
         return {
             "success": True,
@@ -40,7 +33,7 @@ class ProductListResource(Resource):
         data = request.get_json()
 
         
-        product = create_product(data)
+        product = ProductService.create_product(data)
 
         return {
             "success": True,
@@ -57,7 +50,7 @@ class ProductResource(Resource):
     def get(self, product_id):
 
         
-        product = get_product_by_id(product_id)
+        product = ProductService.get_product_by_id(product_id)
 
         if not product:
             return {
@@ -81,7 +74,7 @@ class ProductResource(Resource):
     def put(self, product_id):
 
         # Find existing product
-        product = get_product_by_id(product_id)
+        product = ProductService.get_product_by_id(product_id)
 
         if not product:
             return {
@@ -93,7 +86,7 @@ class ProductResource(Resource):
         data = request.get_json()
 
     
-        updated_product = update_product(product, data)
+        updated_product = ProductService.update_product(product, data)
 
         return {
             "success": True,
@@ -108,7 +101,7 @@ class ProductResource(Resource):
     def delete(self, product_id):
 
         
-        product = get_product_by_id(product_id)
+        product = ProductService.get_product_by_id(product_id)
 
         if not product:
             return {
@@ -117,7 +110,7 @@ class ProductResource(Resource):
             }, 
 
     
-        delete_product(product)
+        ProductService.delete_product(product)
 
         return {
             "success": True,

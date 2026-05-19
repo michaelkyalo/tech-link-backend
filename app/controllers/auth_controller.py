@@ -2,10 +2,8 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 
-from app.services.auth_service import (
-    register_user,
-    login_user
-)
+from app.services.auth_service import AuthService
+
 
 
 class RegisterResource(Resource):
@@ -16,7 +14,7 @@ class RegisterResource(Resource):
         data = request.get_json()
 
         
-        user, error = register_user(data)
+        user, error = AuthService.register_user(data)
 
         
         if error:
@@ -49,7 +47,7 @@ class LoginResource(Resource):
         data = request.get_json()
 
     
-        user, error = login_user(data)
+        user, error = AuthService.login_user(data)
 
         
         if error:

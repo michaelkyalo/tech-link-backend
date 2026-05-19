@@ -2,13 +2,7 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
-from app.services.order_service import (
-    create_order,
-    get_all_orders,
-    get_order_by_id,
-    update_order_status,
-    delete_order
-)
+from app.services.order_service import OrderService 
 
 
 class OrderListResource(Resource):
@@ -17,7 +11,7 @@ class OrderListResource(Resource):
     def get(self):
 
         # Fetch all orders
-        orders = get_all_orders()
+        orders = OrderService.get_all_orders()
 
         return {
             "success": True,
@@ -39,7 +33,7 @@ class OrderListResource(Resource):
         data = request.get_json()
 
         # Create order
-        order = create_order(data)
+        order = OrderService.create_order(data)
 
         return {
             "success": True,
@@ -57,7 +51,7 @@ class OrderResource(Resource):
     def get(self, order_id):
 
         # Find order
-        order = get_order_by_id(order_id)
+        order = OrderService.get_order_by_id(order_id)
 
         if not order:
             return {
@@ -79,7 +73,7 @@ class OrderResource(Resource):
     def put(self, order_id):
 
         
-        order = get_order_by_id(order_id)
+        order = OrderService.get_order_by_id(order_id)
 
         if not order:
             return {
@@ -91,7 +85,7 @@ class OrderResource(Resource):
         data = request.get_json()
 
     
-        updated_order = update_order_status(order, data)
+        updated_order = OrderService.update_order_status(order, data)
 
         return {
             "success": True,
@@ -106,7 +100,7 @@ class OrderResource(Resource):
     def delete(self, order_id):
 
         
-        order = get_order_by_id(order_id)
+        order = OrderService.get_order_by_id(order_id)
 
         if not order:
             return {
@@ -115,7 +109,7 @@ class OrderResource(Resource):
             },
 
         
-        delete_order(order)
+        OrderService.delete_order(order)
 
         return {
             "success": True,

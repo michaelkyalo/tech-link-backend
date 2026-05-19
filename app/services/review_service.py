@@ -20,7 +20,6 @@ class ReviewService:
         if not product:
             return None, "Product not found"
 
-        # Optional validation: rating range
         if data["rating"] < 1 or data["rating"] > 5:
             return None, "Rating must be between 1 and 5"
 

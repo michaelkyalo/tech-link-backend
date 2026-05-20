@@ -13,7 +13,7 @@ def success_response(
         "data": data
     }
 
-    return jsonify(response), 
+    return jsonify(response), 200
 
 
 def error_response(
@@ -25,3 +25,4 @@ def error_response(
         "success": False,
         "message": message
     }
+    return jsonify(response), 400

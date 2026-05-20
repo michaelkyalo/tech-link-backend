@@ -10,6 +10,7 @@ class RegisterResource(Resource):
 
     def post(self):
 
+
         data = request.get_json()
 
         
@@ -20,7 +21,7 @@ class RegisterResource(Resource):
             return {
                 "success": False,
                 "message": error
-            }, 400
+            },400
 
         
         token = create_access_token(identity=user.id)
@@ -35,7 +36,7 @@ class RegisterResource(Resource):
                 "email": user.email,
                 "role": user.role
             }
-        }, 201
+        },201
 
 
 class LoginResource(Resource):

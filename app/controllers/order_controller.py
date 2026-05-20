@@ -24,15 +24,15 @@ class OrderListResource(Resource):
                 }
                 for order in orders
             ]
-        },
+        }
 
     @jwt_required()
     def post(self):
 
-        # Get request data
+        
         data = request.get_json()
 
-        # Create order
+        
         order = OrderService.create_order(data)
 
         return {
@@ -42,15 +42,13 @@ class OrderListResource(Resource):
                 "id": order.id,
                 "status": order.status
             }
-        },
-
-
+        }
 class OrderResource(Resource):
 
     @jwt_required()
     def get(self, order_id):
 
-        # Find order
+        
         order = OrderService.get_order_by_id(order_id)
 
         if not order:
@@ -67,7 +65,7 @@ class OrderResource(Resource):
                 "total_amount": order.total_amount,
                 "status": order.status
             }
-        },
+        }
 
     @jwt_required()
     def put(self, order_id):
@@ -79,7 +77,7 @@ class OrderResource(Resource):
             return {
                 "success": False,
                 "message": "Order not found"
-            },
+            }, 404
 
     
         data = request.get_json()
@@ -94,24 +92,22 @@ class OrderResource(Resource):
                 "id": updated_order.id,
                 "status": updated_order.status
             }
-        },
+        }
 
     @jwt_required()
     def delete(self, order_id):
 
-        
         order = OrderService.get_order_by_id(order_id)
 
         if not order:
             return {
                 "success": False,
                 "message": "Order not found"
-            },
+            }, 404
 
-        
         OrderService.delete_order(order)
 
         return {
             "success": True,
             "message": "Order deleted successfully"
-        },
+        }, 200

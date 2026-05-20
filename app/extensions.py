@@ -7,5 +7,5 @@ from flask_socketio import SocketIO
 bcrypt = Bcrypt()
 cors = CORS(resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 migrate = Migrate()
-socketio = SocketIO(cors_allowed_origins="*")
-api = Api(prefix="/api")
+socketio = SocketIO(cors_allowed_origins="*",async_mode="threading")
+api = Api()  

@@ -5,7 +5,7 @@ from flask_restful import Api
 from flask_socketio import SocketIO
 
 bcrypt = Bcrypt()
-cors = CORS()
+cors = CORS(resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 migrate = Migrate()
 socketio = SocketIO(cors_allowed_origins="*")
 api = Api(prefix="/api")

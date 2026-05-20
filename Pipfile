@@ -23,6 +23,7 @@ importlib-metadata = "==6.0.0"
 importlib-resources = "==5.10.0"
 sendgrid = "==6.12.5"
 python-dotenv = "*"
+requests = "*"
 
 [dev-packages]
 

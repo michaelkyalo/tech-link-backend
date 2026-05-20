@@ -1,5 +1,4 @@
 from flask import Flask
-
 from app.config.config import Config
 from app.config.database import db
 from app.config.jwt_config import jwt
@@ -24,7 +23,7 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app,resources={r"/*": {"origins": "*"}})
     migrate.init_app(app, db)
     socketio.init_app(app)
     api.init_app(app)

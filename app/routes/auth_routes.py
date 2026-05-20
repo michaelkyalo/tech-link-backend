@@ -1,3 +1,4 @@
+from app.controllers import auth_controller 
 from app.controllers.auth_controller import (
     RegisterResource,
     LoginResource

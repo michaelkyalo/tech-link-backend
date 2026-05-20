@@ -10,7 +10,16 @@ class Review(db.Model):
     review_id = db.Column(
         db.BigInteger,
         primary_key=True
+    )    
+    
+    
+    product_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("products.product_id"),
+        nullable=False
     )
+    
+    
 
     buyer_id = db.Column(
         db.BigInteger,

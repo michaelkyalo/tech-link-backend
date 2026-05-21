@@ -10,7 +10,7 @@ class RegisterResource(Resource):
         if error:
             return {"success": False, "message": error}, 400
 
-        token = create_access_token(identity=user.user_id)
+        token = create_access_token(identity=str(user.user_id))
         return {
             "success": True,
             "message": "User registered successfully",
@@ -30,7 +30,7 @@ class LoginResource(Resource):
         if error:
             return {"success": False, "message": error}, 401
 
-        token = create_access_token(identity=user.user_id)
+        token = create_access_token(identity=str(user.user_id))
         return {
             "success": True,
             "message": "Login successful",

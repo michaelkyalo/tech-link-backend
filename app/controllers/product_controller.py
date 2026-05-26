@@ -21,6 +21,7 @@ def product_to_dict(product):
 
 class ProductListResource(Resource):
     def get(self):
+        # Public endpoint — returns ALL products (marketplace, etc.)
         page     = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
         paginated = ProductService.get_all_products(page=page, per_page=per_page)
@@ -45,6 +46,30 @@ class ProductListResource(Resource):
                 return {"success": False, "message": f"{field} is required"}, 400
         product = ProductService.create_product(data, farmer_id=current_user_id)
         return {"success": True, "message": "Product created", "product": product_to_dict(product)}, 201
+
+
+# ── NEW: farmer sees only their own products ──────────────────────────────────
+class MyProductsResource(Resource):
+    @jwt_required()
+    def get(self):
+        current_user_id = int(get_jwt_identity())
+        user = User.query.get(current_user_id)
+        if not user or user.role != "farmer":
+            return {"success": False, "message": "Farmers only"}, 403
+
+        page     = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 10, type=int)
+        paginated = ProductService.get_products_by_farmer(
+            farmer_id=current_user_id, page=page, per_page=per_page
+        )
+        return {
+            "success":  True,
+            "page":     paginated.page,
+            "pages":    paginated.pages,
+            "total":    paginated.total,
+            "products": [product_to_dict(p) for p in paginated.items]
+        }
+
 
 class ProductResource(Resource):
     def get(self, product_id):

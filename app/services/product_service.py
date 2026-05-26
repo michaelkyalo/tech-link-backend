@@ -2,7 +2,6 @@ from app.config.database import db
 from app.models.product_model import Product
 
 class ProductService:
-
     @staticmethod
     def create_product(data, farmer_id, image_url=None):
         product = Product(
@@ -22,6 +21,15 @@ class ProductService:
     @staticmethod
     def get_all_products(page=1, per_page=10):
         return Product.query.paginate(page=page, per_page=per_page, error_out=False)
+
+    @staticmethod
+    def get_products_by_farmer(farmer_id, page=1, per_page=10):
+        return (
+            Product.query
+            .filter_by(farmer_id=farmer_id)
+            .order_by(Product.created_at.desc())
+            .paginate(page=page, per_page=per_page, error_out=False)
+        )
 
     @staticmethod
     def get_product_by_id(product_id):

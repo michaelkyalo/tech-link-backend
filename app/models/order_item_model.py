@@ -38,5 +38,4 @@ class OrderItem(db.Model):
     )
 
     def __repr__(self):
-
         return f"<OrderItem {self.order_item_id}>"

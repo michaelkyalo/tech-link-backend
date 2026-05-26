@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from app.config.database import db
 
 
@@ -18,19 +17,24 @@ class Order(db.Model):
         nullable=False
     )
 
-    total_price = db.Column(
+    total_amount = db.Column(
         db.Numeric(10, 2),
         nullable=False
     )
 
-    order_status = db.Column(
-        db.String(30),
-        default="pending"
+    payment_method = db.Column(
+        db.String(50),
+        nullable=True
     )
 
-    payment_status = db.Column(
-        db.String(30),
-        default="pending"
+    delivery_address = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(50),
+        default="Pending"
     )
 
     created_at = db.Column(
@@ -38,13 +42,5 @@ class Order(db.Model):
         default=datetime.utcnow
     )
 
-    order_items = db.relationship(
-        "OrderItem",
-        backref="order",
-        lazy=True,
-        cascade="all, delete"
-    )
-
     def __repr__(self):
-
         return f"<Order {self.order_id}>"
